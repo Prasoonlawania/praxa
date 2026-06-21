@@ -23,7 +23,7 @@ import {
   Paperclip,
   Phone,
   Video,
-  File,
+  File as FileIcon,
   X,
   Loader2,
   Play,
@@ -711,7 +711,7 @@ export function ChatArea({ user, activeChat, setActiveChat }: ChatAreaProps) {
               ) : uploadingFile.type.startsWith("audio/") ? (
                 <Music className="w-5 h-5" />
               ) : (
-                <File className="w-5 h-5" />
+                <FileIcon className="w-5 h-5" />
               )}
             </div>
             <div className="flex-1 min-w-0">

@@ -107,6 +107,10 @@ service cloud.firestore {
         (data.keys().hasAll(['readBy']) ? (data.readBy is list && data.readBy.size() <= 100) : true);
     }
 
+    match /chats/{chatId}/calls/{callId} {
+      allow read, write: if isSignedIn() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
+    }
+
     match /chats/{chatId}/messages/{messageId} {
       // Relational check: User must be a participant in the parent chat
       function isChatParticipant(cid) {
