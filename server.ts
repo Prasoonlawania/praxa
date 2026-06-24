@@ -6,10 +6,22 @@ import { GoogleGenAI } from "@google/genai";
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = parseInt(process.env.PORT || "3000", 10);
 
   // Use JSON middleware wrapper
   app.use(express.json());
+
+  // CORS middleware to allow local cross-origin API access
+  app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    if (req.method === "OPTIONS") {
+      res.sendStatus(200);
+    } else {
+      next();
+    }
+  });
 
   // API Route for Gemini
   app.post("/api/gemini/chat", async (req, res) => {

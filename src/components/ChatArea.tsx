@@ -45,6 +45,15 @@ import type { Chat, Message } from "../types";
 import { format } from "date-fns";
 import { VideoCall } from "./VideoCall";
 
+const getApiUrl = (path: string) => {
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    if (window.location.port !== '3000' && window.location.port !== '') {
+      return `http://localhost:3000${path}`;
+    }
+  }
+  return path;
+};
+
 function ThemeVisuals({ themeId }: { themeId?: string }) {
   if (!themeId) return null;
 
@@ -554,7 +563,7 @@ export function ChatArea({ user, activeChat, setActiveChat, aiProfilePic, aiBg, 
             parts: [{ text: msg.content }]
           }));
 
-        const res = await fetch('/api/gemini/chat', {
+        const res = await fetch(getApiUrl('/api/gemini/chat'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: messageContent, history: historyPayload })
@@ -693,7 +702,7 @@ export function ChatArea({ user, activeChat, setActiveChat, aiProfilePic, aiBg, 
     const chatHistory = messages.map(msg => `${msg.senderId === user.uid ? 'Me' : 'Them'}: ${msg.content || '[File/Image]'}`).join('\n');
     setIsAiLoading(true);
     try {
-      const res = await fetch('/api/gemini/summarize', {
+      const res = await fetch(getApiUrl('/api/gemini/summarize'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ chatHistory })
